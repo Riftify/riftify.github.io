@@ -1,0 +1,30 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /tracks/{trackId} {
+
+      // Anyone can read a track once it's approved.
+      // Signed-in admins can read everything, including the pending queue.
+      allow read: if resource.data.status == 'approved' || request.auth != null;
+
+      // Anyone can submit a new track, but only as "pending" —
+      // there is no way for a public submission to mark itself approved.
+      allow create: if request.resource.data.status == 'pending'
+                    && request.resource.data.title is string
+                    && request.resource.data.title.size() > 0
+                    && request.resource.data.title.size() < 120
+                    && request.resource.data.platform in ['spotify', 'youtube']
+                    && request.resource.data.url is string
+                    && request.resource.data.url.size() > 0
+                    && request.resource.data.url.size() < 500
+                    && request.resource.data.keys().hasOnly(
+                         ['title', 'artistOrNote', 'platform', 'url', 'submittedBy', 'status', 'createdAt']
+                       );
+
+      // Only a signed-in admin can approve (update) or reject (delete) a track.
+      allow update, delete: if request.auth != null;
+    }
+  }
+}

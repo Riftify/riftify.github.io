@@ -1,0 +1,1 @@
+export const firebaseConfig={'apiKey':'AIzaSyAK1VkT2nXwmZFsDO4npZL9OTDAkIz3R9o','authDomain':'sonami-60477.firebaseapp.com','projectId':'sonami-60477','storageBucket':'sonami-60477.firebasestorage.app','messagingSenderId':'711313340268','appId':'1:711313340268:web:ab8a5d4cba23b081bca549'};
